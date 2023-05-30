@@ -59,6 +59,35 @@ class DatabaseHelper(context: Context) :
     }
 
 
+    fun updateRecord(user: User): Boolean {
+        val db = this.writableDatabase
+
+        val values = ContentValues()
+        values.put(COLUMN_USER_PASSWORD, user.password)
+
+        val rowsAffected = db.update(
+            TABLE_USER,
+            values,
+            "$COLUMN_USER_NAME = ?",
+            arrayOf(user.name)
+        )
+
+        db.close()
+
+        return rowsAffected > 0
+    }
+
+
+    fun deleteRecord(user: String): Boolean {
+        val db = this.writableDatabase
+        val selection = "$COLUMN_USER_NAME = ?"
+        val selectionArgs = arrayOf(user)
+        val deletedRows = db.delete(TABLE_USER, selection, selectionArgs)
+        db.close()
+        return deletedRows > 0
+    }
+
+
     @SuppressLint("Range")
     fun checkUser(name: String, password: String): Int {
         val db = this.readableDatabase

@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         databaseHelper = DatabaseHelper(this)
 
+        val updateButton = findViewById<Button>(R.id.update_button)
+        val deleteButton = findViewById<Button>(R.id.delete_button)
+
         val usernameEditText = findViewById<EditText>(R.id.username)
         val passwordEditText = findViewById<EditText>(R.id.password)
         val registerButton = findViewById<Button>(R.id.register_button)
@@ -64,6 +67,45 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        updateButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val newPassword = passwordEditText.text.toString()
+
+            if (username.isEmpty() || newPassword.isEmpty()) {
+                Toast.makeText(this, "Username or new password cannot be empty.", Toast.LENGTH_LONG).show()
+            } else {
+                val updatedUser = User(name = username, password = newPassword)
+                val result = databaseHelper.updateRecord(updatedUser)
+                if (result) {
+                    Toast.makeText(this, "User updated successfully!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to update user!", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        deleteButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+
+            if (username.isEmpty()) {
+                Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_LONG).show()
+            } else {
+                val result = databaseHelper.deleteRecord(username)
+                if (result) {
+                    Toast.makeText(this, "User deleted successfully!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to delete user!", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+
+
+
+
+
+
 
     }
     }
